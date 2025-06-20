@@ -35,7 +35,7 @@
 ---
 
 ---
-## Pictures
+# Pictures
 ![Graphs](image.png)
 ![Dashboard](image-1.png)
 ![Login](image-2.png)
