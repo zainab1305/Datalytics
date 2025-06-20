@@ -44,16 +44,16 @@
 ## 🔧 Setup Instructions
 
 ### 1. Clone the repository
-git clone https://github.com/zainab1305/Datalytics.git
-cd backend
-npm install
-cp .env.example .env
+- git clone https://github.com/zainab1305/Datalytics.git
+- cd backend
+- npm install
+- cp .env.example .env
 ## Fill in Mongo URI and other values
-npm start
+- npm start
 
-cd frontend
-npm install
-npm run dev
+- cd frontend
+- npm install
+- npm run dev
 
 ## MongoDB connection string
 MONGO_URI=your_mongo_uri
@@ -62,7 +62,7 @@ MONGO_URI=your_mongo_uri
 PORT=5001
 
 ## Admin Access
-Admin Email: your_admin_email@gmail.com (hardcoded for demo)
+Admin Email: your_admin_email@gmail.com 
 
 ## Future Improvements:
 - Export to PDF
