@@ -16,6 +16,8 @@ import { Bar, Line, Pie, Radar } from "react-chartjs-2";
 import ExcelDataContext from "./ExcelDataContext";
 import { useNavigate } from "react-router-dom";
 import html2canvas from "html2canvas";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, Text } from "@react-three/drei";
 
 ChartJS.register(
   CategoryScale,
@@ -30,11 +32,39 @@ ChartJS.register(
   RadialLinearScale
 );
 
+const Bar3D = ({ data, labels }) => {
+  return (
+    <Canvas camera={{ position: [5, 5, 10], fov: 50 }} className="rounded-lg">
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[0, 5, 5]} intensity={1.5} />
+      <OrbitControls />
+      {data.map((val, index) => (
+        <group key={index} position={[index * 1.5, 0, 0]}>
+          <mesh position={[0, val / 2, 0]}>
+            <boxGeometry args={[1, val, 1]} />
+            <meshStandardMaterial color={"#8e24aa"} />
+          </mesh>
+          <Text
+            position={[0, -0.8, 0]}
+            fontSize={0.4}
+            color="#333"
+            anchorX="center"
+            anchorY="middle"
+          >
+            {labels[index]}
+          </Text>
+        </group>
+      ))}
+    </Canvas>
+  );
+};
+
 const Visualization = () => {
   const { excelData } = useContext(ExcelDataContext);
   const [xKey, setXKey] = useState("");
   const [yKey, setYKey] = useState("");
   const [chartType, setChartType] = useState("bar");
+  const [mode, setMode] = useState("2d");
   const navigate = useNavigate();
   const chartRef = useRef(null);
 
@@ -67,6 +97,16 @@ const Visualization = () => {
   };
 
   const renderChart = () => {
+    if (mode === "3d") {
+      return (
+        <div className="w-full h-full">
+          <Bar3D
+            data={excelData.map((row) => parseFloat(row[yKey]))}
+            labels={excelData.map((row) => row[xKey])}
+          />
+        </div>
+      );
+    }
     switch (chartType) {
       case "bar":
         return <Bar data={chartData} ref={chartRef} />;
@@ -82,11 +122,11 @@ const Visualization = () => {
   };
 
   const handleDownload = () => {
-    const chartCanvas = document.querySelector('canvas');
+    const chartCanvas = document.querySelector("canvas");
     if (!chartCanvas) return;
-    html2canvas(chartCanvas).then(canvas => {
-      const link = document.createElement('a');
-      link.download = 'chart.png';
+    html2canvas(chartCanvas).then((canvas) => {
+      const link = document.createElement("a");
+      link.download = "chart.png";
       link.href = canvas.toDataURL();
       link.click();
     });
@@ -135,6 +175,16 @@ const Visualization = () => {
         <div className="flex h-[85%] gap-6">
           {/* Controls */}
           <div className="w-1/4 bg-white p-5 rounded-lg shadow-md h-full overflow-y-auto">
+            <label className="block mb-2 font-semibold">Mode:</label>
+            <select
+              value={mode}
+              onChange={(e) => setMode(e.target.value)}
+              className="w-full mb-4 p-2 border rounded"
+            >
+              <option value="2d">2D</option>
+              <option value="3d">3D</option>
+            </select>
+
             <label className="block mb-2 font-semibold">X-axis:</label>
             <select
               value={xKey}
@@ -159,17 +209,21 @@ const Visualization = () => {
               ))}
             </select>
 
-            <label className="block mb-2 font-semibold">Chart Type:</label>
-            <select
-              value={chartType}
-              onChange={(e) => setChartType(e.target.value)}
-              className="w-full p-2 border rounded"
-            >
-              <option value="bar">Bar</option>
-              <option value="line">Line</option>
-              <option value="pie">Pie</option>
-              <option value="radar">Radar</option>
-            </select>
+            {mode === "2d" && (
+              <>
+                <label className="block mb-2 font-semibold">Chart Type:</label>
+                <select
+                  value={chartType}
+                  onChange={(e) => setChartType(e.target.value)}
+                  className="w-full p-2 border rounded"
+                >
+                  <option value="bar">Bar</option>
+                  <option value="line">Line</option>
+                  <option value="pie">Pie</option>
+                  <option value="radar">Radar</option>
+                </select>
+              </>
+            )}
           </div>
 
           {/* Chart */}
