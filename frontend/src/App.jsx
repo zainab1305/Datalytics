@@ -5,6 +5,7 @@ import Dashboard from "./components/Dashboard";
 import Visualization from "./components/Visualization";
 import ExcelDataContext from "./components/ExcelDataContext";
 import UploadFile from "./components/UploadFile";
+import AdminPanel from "./components/AdminPanel";
 function App() {
   const [excelData, setExcelData] = useState([]);
 
@@ -15,6 +16,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/visualization" element={<Visualization />} />
         <Route path="/uploadFile" element={<UploadFile/>}/>
+        <Route path="/admin" element={<AdminPanel />} />
       </Routes>
     </ExcelDataContext.Provider>
   );

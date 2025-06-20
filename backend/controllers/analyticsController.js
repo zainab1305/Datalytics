@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import * as XLSX from "xlsx";
 import User from "../models/ExcelData.js";
 import Upload from "../models/uploads.js";
-
+import { generateSummary } from "../utils/summaryGenerator.js";
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret"; // Use .env in production
 
 // ===================
@@ -82,10 +82,11 @@ export const analyzeExcel = async (req, res) => {
 
     // ✅ Save upload with preview rows
     await Upload.create({
-      fileName: file.originalname,
-      userEmail: req.body.email,
-      previewRows: sheetData.slice(0, 4),
-    });
+  fileName: file.originalname,
+  userEmail: req.headers["user-email"], // ✅ Correct way
+  previewRows: sheetData.slice(0, 4),
+});
+
 
     res.status(200).json({
       message: "File uploaded and parsed successfully",
@@ -118,3 +119,17 @@ export const getAllData = async (req, res) => {
   }
 };
 
+export const getAIInsight = (req, res) => {
+  try {
+    const { sheetData } = req.body;
+    if (!sheetData || !Array.isArray(sheetData)) {
+      return res.status(400).json({ message: "Invalid data format" });
+    }
+
+    const summary = generateSummary(sheetData);
+    res.status(200).json({ summary });
+  } catch (error) {
+    console.error("AI Insight Error:", error);
+    res.status(500).json({ message: "Failed to generate insight" });
+  }
+};

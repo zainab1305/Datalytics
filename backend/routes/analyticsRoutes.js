@@ -5,6 +5,7 @@ import {
   getAllData,
   deleteAllData,
 } from "../controllers/analyticsController.js";
+import { generateSummary } from "../utils/summaryGenerator.js";
 import Upload from "../models/uploads.js";
 
 const router = express.Router();
@@ -46,6 +47,20 @@ router.get("/preview/:id", async (req, res) => {
   }
 });
 
+router.post("/insight", async (req, res) => {
+  try {
+    const { sheetData } = req.body;
+    if (!sheetData || !Array.isArray(sheetData)) {
+      return res.status(400).json({ message: "Invalid data format" });
+    }
 
+    // Call our helper
+    const summary = generateSummary(sheetData);
+    res.json({ summary });
+  } catch (err) {
+    console.error("AI Insight Error:", err);
+    res.status(500).json({ message: "Failed to generate insight" });
+  }
+});
 
 export default router;

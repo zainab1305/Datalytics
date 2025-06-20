@@ -61,6 +61,14 @@ const Dashboard = () => {
           >
             Visualize Data
           </button>
+          {user?.email === "your_admin_email@gmail.com" && (
+      <button
+        onClick={() => navigate("/admin")}
+        className="w-full mb-4 bg-[#ffcdd2] hover:bg-[#ef9a9a] text-[#3e1f47] font-medium px-4 py-2 rounded"
+      >
+        Admin Panel
+      </button>
+    )}
         </div>
         <button
           onClick={() => navigate("/")}

@@ -17,23 +17,30 @@ function AuthForm() {
   };
 
   const handleSubmit = async () => {
-    try {
-      const endpoint = isSignup
-        ? "http://localhost:5001/api/analytics/signup"
-        : "http://localhost:5001/api/analytics/login";
+  try {
+    const endpoint = isSignup
+      ? "http://localhost:5001/api/analytics/signup"
+      : "http://localhost:5001/api/analytics/login";
 
-      const payload = isSignup
-        ? { name, email, password }
-        : { email, password };
+    const payload = isSignup
+      ? { name, email, password }
+      : { email, password };
 
-      const response = await axios.post(endpoint, payload);
-      console.log("Success:", response.data);
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Error:", error.response?.data || error.message);
-      alert(error.response?.data?.message || "Something went wrong.");
+    const response = await axios.post(endpoint, payload);
+
+    // ✅ Store user after successful login
+    if (!isSignup) {
+      localStorage.setItem("user", JSON.stringify(response.data.user));
     }
-  };
+
+    console.log("Success:", response.data);
+    navigate("/dashboard");
+  } catch (error) {
+    console.error("Error:", error.response?.data || error.message);
+    alert(error.response?.data?.message || "Something went wrong.");
+  }
+};
+
 
   return (
     <div className="flex h-screen">
