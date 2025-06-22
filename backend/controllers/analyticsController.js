@@ -80,6 +80,7 @@ export const analyzeExcel = async (req, res) => {
     const sheetName = workbook.SheetNames[0];
     const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
     console.log("📩 Received upload from userEmail:", req.body.userEmail || req.headers["user-email"]);
+    console.log("📩 Received upload from userEmail:", req.headers["user-email"]);
 
     // ✅ Save upload with preview rows
    const userEmail =

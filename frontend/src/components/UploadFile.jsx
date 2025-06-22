@@ -3,7 +3,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ExcelDataContext from "./ExcelDataContext";
 
-
 const user = JSON.parse(localStorage.getItem("user")) || {};
 
 const UploadFile = () => {
@@ -28,31 +27,22 @@ const UploadFile = () => {
   const handleUpload = async () => {
     if (!selectedFile) return alert("Please select a file");
 
-    console.log("Uploading as:", user.email);  // ✅ Logs who's uploading
+    console.log("Uploading as:", user.email);
 
-const formData = new FormData();
-formData.append("file", selectedFile);
-
-
-// Debug: check all form data
-for (let pair of formData.entries()) {
-  console.log(pair[0], pair[1]);  // ✅ Shows file + email in console
-}
-
+    const formData = new FormData();
+    formData.append("file", selectedFile);
 
     try {
-      formData.append("userEmail", user.email); // ✅ Add this
-
-const res = await axios.post(
+      const res = await axios.post(
   "http://localhost:5001/api/analytics/upload",
   formData,
   {
     headers: {
       "Content-Type": "multipart/form-data",
+      "user-email": user.email, // ✅ Send email in headers!
     },
   }
 );
-
 
       const sheetData = res.data.data;
       setExcelData(sheetData);
@@ -116,10 +106,13 @@ const res = await axios.post(
             className="max-w-4xl w-full bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-lg mt-12 shadow-xl"
           >
             <h3 className="text-xl font-bold mb-3 text-[#6a1b9a]">🧠 AI Insight Summary</h3>
-            <div className="whitespace-pre-wrap text-sm text-gray-800">{insight.replace(/\*\*/g, "")}</div>
+            <div className="whitespace-pre-wrap text-sm text-gray-800">
+              {insight.replace(/\*\*/g, "")}
+            </div>
             <button
               onClick={() => navigate("/visualization")}
-              className="mt-4 bg-[#9c27b0] hover:bg-[#8e24aa] text-white font-semibold px-6 py-2 rounded">
+              className="mt-4 bg-[#9c27b0] hover:bg-[#8e24aa] text-white font-semibold px-6 py-2 rounded"
+            >
               Proceed to Visualization →
             </button>
           </div>
