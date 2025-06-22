@@ -15,7 +15,10 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // POST route: Upload and analyze Excel
-router.post("/upload", upload.single("file"), analyzeExcel);
+router.post("/upload", upload.single("file"), (req, res, next) => {
+  console.log("➡️ Received userEmail:", req.body.userEmail); // ✅ Debug
+  analyzeExcel(req, res); // hand off
+});
 
 // GET route: Retrieve all stored analyzed data
 router.get("/data", getAllData);

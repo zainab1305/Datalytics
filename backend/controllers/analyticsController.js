@@ -79,11 +79,15 @@ export const analyzeExcel = async (req, res) => {
     const workbook = XLSX.read(file.buffer, { type: "buffer" });
     const sheetName = workbook.SheetNames[0];
     const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    console.log("📩 Received upload from userEmail:", req.body.userEmail || req.headers["user-email"]);
 
     // ✅ Save upload with preview rows
-    await Upload.create({
+   const userEmail =
+  req.body?.userEmail || req.headers["user-email"] || "unknown@example.com";
+
+await Upload.create({
   fileName: file.originalname,
-  userEmail: req.headers["user-email"], // ✅ Correct way
+  userEmail, // ✅ now always filled
   previewRows: sheetData.slice(0, 4),
 });
 

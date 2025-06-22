@@ -28,20 +28,31 @@ const UploadFile = () => {
   const handleUpload = async () => {
     if (!selectedFile) return alert("Please select a file");
 
-    const formData = new FormData();
-    formData.append("file", selectedFile);
+    console.log("Uploading as:", user.email);  // ✅ Logs who's uploading
+
+const formData = new FormData();
+formData.append("file", selectedFile);
+
+
+// Debug: check all form data
+for (let pair of formData.entries()) {
+  console.log(pair[0], pair[1]);  // ✅ Shows file + email in console
+}
+
 
     try {
-      const res = await axios.post(
-        "http://localhost:5001/api/analytics/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            "user-email": user.email,
-          },
-        }
-      );
+      formData.append("userEmail", user.email); // ✅ Add this
+
+const res = await axios.post(
+  "http://localhost:5001/api/analytics/upload",
+  formData,
+  {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  }
+);
+
 
       const sheetData = res.data.data;
       setExcelData(sheetData);
