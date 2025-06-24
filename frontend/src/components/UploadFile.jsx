@@ -3,10 +3,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ExcelDataContext from "./ExcelDataContext";
 
-const user = JSON.parse(localStorage.getItem("user")) || {};
 
 const UploadFile = () => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const user = JSON.parse(localStorage.getItem("user")) || {};
   const [insight, setInsight] = useState("");
   const insightRef = useRef();
   const { setExcelData } = useContext(ExcelDataContext);
