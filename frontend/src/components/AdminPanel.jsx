@@ -38,45 +38,44 @@ const AdminPanel = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-100 p-8 text-[#3e1f47]">
-      <h2 className="text-4xl font-extrabold mb-6 text-center">🛠️ Admin Panel</h2>
+    <div className="min-h-screen p-8 animate-fade-in">
+      <h2 className="text-5xl font-bold mb-8 text-center text-gray-800 animate-slide-up">Admin Panel</h2>
 
       {/* Back to Dashboard */}
-      <div className="flex justify-center mb-10">
+      <div className="flex justify-center mb-12">
         <button
           onClick={() => window.location.href = "/dashboard"}
-          className="bg-purple-200 hover:bg-purple-300 text-[#3e1f47] font-medium px-6 py-2 rounded shadow"
+          className="btn-outline"
         >
           ⬅ Back to Dashboard
         </button>
       </div>
 
       {/* USERS SECTION */}
-      <div className="bg-blue-50 border border-blue-200 p-6 rounded-xl shadow-lg mb-10">
-        <h3 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-          <User className="w-6 h-6 text-blue-600" />
+      <div className="card mb-12 animate-slide-up max-w-6xl mx-auto">
+        <h3 className="text-3xl font-bold mb-6 flex items-center gap-3 text-blue-600">
           Users ({users.length})
         </h3>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm border border-blue-200 rounded-lg">
-            <thead className="bg-blue-100 text-left">
+          <table className="w-full text-sm border-collapse">
+            <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-2">Name</th>
-                <th className="px-4 py-2">Email</th>
-                <th className="px-4 py-2">Action</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-700 border-b">Name</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-700 border-b">Email</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-700 border-b">Action</th>
               </tr>
             </thead>
             <tbody>
               {users.map((u) => (
-                <tr key={u._id} className="hover:bg-blue-50 border-t border-blue-100">
-                  <td className="px-4 py-2">{u.name}</td>
-                  <td className="px-4 py-2">{u.email}</td>
-                  <td className="px-4 py-2">
+                <tr key={u._id} className="hover:bg-gray-50 transition-colors duration-150 border-b border-gray-100">
+                  <td className="px-6 py-4 font-medium text-gray-900">{u.name}</td>
+                  <td className="px-6 py-4 text-gray-700">{u.email}</td>
+                  <td className="px-6 py-4">
                     <button
                       onClick={() => deleteUser(u._id)}
-                      className="text-red-600 hover:text-red-800 flex items-center gap-1"
+                      className="text-red-600 hover:text-red-700 flex items-center gap-2 font-medium transition-colors duration-200 hover:scale-105"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <span className="text-lg">🗑️</span>
                       Delete
                     </button>
                   </td>
@@ -88,33 +87,32 @@ const AdminPanel = () => {
       </div>
 
       {/* UPLOADS SECTION */}
-      <div className="bg-green-50 border border-green-200 p-6 rounded-xl shadow-lg">
-        <h3 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-          <FileText className="w-6 h-6 text-green-600" />
+      <div className="card animate-slide-up max-w-6xl mx-auto">
+        <h3 className="text-3xl font-bold mb-6 flex items-center gap-3 text-emerald-600">
           Uploads ({uploads.length})
         </h3>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm border border-green-200 rounded-lg">
-            <thead className="bg-green-100 text-left">
+          <table className="w-full text-sm border-collapse">
+            <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-2">File</th>
-                <th className="px-4 py-2">Email</th>
-                <th className="px-4 py-2">Uploaded</th>
-                <th className="px-4 py-2">Action</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-700 border-b">File</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-700 border-b">Email</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-700 border-b">Uploaded</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-700 border-b">Action</th>
               </tr>
             </thead>
             <tbody>
               {uploads.map((u) => (
-                <tr key={u._id} className="hover:bg-green-50 border-t border-green-100">
-                  <td className="px-4 py-2">{u.fileName}</td>
-                  <td className="px-4 py-2">{u.userEmail}</td>
-                  <td className="px-4 py-2">{new Date(u.uploadTime).toLocaleString()}</td>
-                  <td className="px-4 py-2">
+                <tr key={u._id} className="hover:bg-gray-50 transition-colors duration-150 border-b border-gray-100">
+                  <td className="px-6 py-4 font-medium text-gray-900">{u.fileName}</td>
+                  <td className="px-6 py-4 text-gray-700">{u.userEmail}</td>
+                  <td className="px-6 py-4 text-gray-600">{new Date(u.uploadTime).toLocaleString()}</td>
+                  <td className="px-6 py-4">
                     <button
                       onClick={() => deleteUpload(u._id)}
-                      className="text-red-600 hover:text-red-800 flex items-center gap-1"
+                      className="text-red-600 hover:text-red-700 flex items-center gap-2 font-medium transition-colors duration-200 hover:scale-105"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <span className="text-lg">🗑️</span>
                       Delete
                     </button>
                   </td>

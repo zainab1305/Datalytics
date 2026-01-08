@@ -33,6 +33,17 @@ ChartJS.register(
 );
 
 const Bar3D = ({ data, labels }) => {
+  const colors = [
+    "#3B82F6", // Blue
+    "#10B981", // Emerald
+    "#F59E0B", // Amber
+    "#EF4444", // Red
+    "#8B5CF6", // Violet
+    "#EC4899", // Pink
+    "#06B6D4", // Cyan
+    "#22C55E", // Green
+  ];
+
   return (
     <Canvas camera={{ position: [5, 5, 10], fov: 50 }} className="rounded-lg">
       <ambientLight intensity={0.6} />
@@ -42,7 +53,7 @@ const Bar3D = ({ data, labels }) => {
         <group key={index} position={[index * 1.5, 0, 0]}>
           <mesh position={[0, val / 2, 0]}>
             <boxGeometry args={[1, val, 1]} />
-            <meshStandardMaterial color={"#8e24aa"} />
+            <meshStandardMaterial color={colors[index % colors.length]} />
           </mesh>
           <Text
             position={[0, -0.8, 0]}
@@ -70,8 +81,18 @@ const Visualization = () => {
 
   if (excelData.length === 0) {
     return (
-      <div className="h-screen flex items-center justify-center text-gray-700 text-lg">
-        No data found. Please upload a file from the dashboard.
+      <div className="h-screen flex items-center justify-center animate-fade-in">
+        <div className="card text-center p-12 max-w-md">
+          <div className="text-6xl mb-6 text-blue-500">📈</div>
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">No Data Available</h2>
+          <p className="text-lg text-gray-600 mb-6">Please upload a file from the dashboard to visualize your data.</p>
+          <button
+            onClick={() => navigate("/uploadFile")}
+            className="btn-primary"
+          >
+            Upload File
+          </button>
+        </div>
       </div>
     );
   }
@@ -85,13 +106,36 @@ const Visualization = () => {
         label: `${yKey} vs ${xKey}`,
         data: excelData.map((row) => parseFloat(row[yKey])),
         backgroundColor: [
-          "rgba(255, 223, 186, 0.6)",
-          "rgba(255, 192, 203, 0.6)",
-          "rgba(255, 255, 153, 0.6)",
-          "rgba(204, 229, 255, 0.6)",
+          "rgba(59, 130, 246, 0.8)", // Blue
+          "rgba(16, 185, 129, 0.8)", // Emerald
+          "rgba(245, 158, 11, 0.8)", // Amber
+          "rgba(239, 68, 68, 0.8)", // Red
+          "rgba(139, 92, 246, 0.8)", // Violet
+          "rgba(236, 72, 153, 0.8)", // Pink
+          "rgba(6, 182, 212, 0.8)", // Cyan
+          "rgba(34, 197, 94, 0.8)", // Green
         ],
-        borderColor: "rgba(255, 192, 203, 1)",
-        borderWidth: 1,
+        borderColor: [
+          "rgb(59, 130, 246)", // Blue
+          "rgb(16, 185, 129)", // Emerald
+          "rgb(245, 158, 11)", // Amber
+          "rgb(239, 68, 68)", // Red
+          "rgb(139, 92, 246)", // Violet
+          "rgb(236, 72, 153)", // Pink
+          "rgb(6, 182, 212)", // Cyan
+          "rgb(34, 197, 94)", // Green
+        ],
+        borderWidth: 2,
+        hoverBackgroundColor: [
+          "rgba(59, 130, 246, 1)", // Blue
+          "rgba(16, 185, 129, 1)", // Emerald
+          "rgba(245, 158, 11, 1)", // Amber
+          "rgba(239, 68, 68, 1)", // Red
+          "rgba(139, 92, 246, 1)", // Violet
+          "rgba(236, 72, 153, 1)", // Pink
+          "rgba(6, 182, 212, 1)", // Cyan
+          "rgba(34, 197, 94, 1)", // Green
+        ],
       },
     ],
   };
@@ -133,20 +177,20 @@ const Visualization = () => {
   };
 
   return (
-    <div className="h-screen flex bg-gradient-to-r from-[#f3e5f5] to-[#e0c3fc] text-[#3e1f47]">
+    <div className="h-screen flex animate-fade-in">
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg p-6 flex flex-col justify-between">
+      <div className="w-64 sidebar-card p-6 flex flex-col justify-between animate-slide-up">
         <div>
-          <h1 className="text-2xl font-bold mb-6 text-[#6a1b9a]">Datalytics</h1>
+          <h1 className="text-3xl font-bold mb-8 text-gray-800">Datalytics</h1>
           <button
             onClick={() => navigate("/dashboard")}
-            className="w-full mb-4 bg-[#d1b3ff] hover:bg-[#c29eff] text-[#3e1f47] font-medium px-4 py-2 rounded"
+            className="w-full mb-4 btn-primary"
           >
             Dashboard
           </button>
           <button
             onClick={() => navigate("/uploadFile")}
-            className="w-full mb-4 bg-[#e1bee7] hover:bg-[#d7aef7] text-[#3e1f47] font-medium px-4 py-2 rounded"
+            className="w-full mb-4 btn-secondary"
           >
             Upload Another File
           </button>
@@ -154,86 +198,106 @@ const Visualization = () => {
 
         <button
           onClick={() => navigate("/")}
-          className="w-full bg-[#f48fb1] hover:bg-[#f06292] text-white font-medium px-4 py-2 rounded"
+          className="w-full bg-gradient-to-r from-gray-600 to-gray-800 hover:from-gray-700 hover:to-gray-900 text-white font-semibold py-3 px-4 rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
         >
           Logout
         </button>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 relative">
-        <h2 className="text-3xl font-bold mb-4 text-center">📊 Data Visualization</h2>
+      <div className="flex-1 p-6 relative animate-slide-up">
+        <h2 className="text-4xl font-bold mb-6 text-center text-gray-800">
+          Data Visualization
+        </h2>
 
         {/* Download Button */}
         <button
           onClick={handleDownload}
-          className="absolute top-6 right-6 bg-yellow-300 hover:bg-yellow-400 text-[#3e1f47] font-bold px-4 py-2 rounded shadow-md"
+          className="absolute top-6 right-6 bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3 rounded-lg shadow-md transform transition-all duration-200 hover:scale-105 hover:shadow-lg"
         >
           Download PNG
         </button>
 
         <div className="flex h-[85%] gap-6">
           {/* Controls */}
-          <div className="w-1/4 bg-white p-5 rounded-lg shadow-md h-full overflow-y-auto">
-            <label className="block mb-2 font-semibold">Mode:</label>
-            <select
-              value={mode}
-              onChange={(e) => setMode(e.target.value)}
-              className="w-full mb-4 p-2 border rounded"
-            >
-              <option value="2d">2D</option>
-              <option value="3d">3D</option>
-            </select>
+          <div className="w-1/4 card h-full overflow-y-auto">
+            <h3 className="text-xl font-bold mb-6 text-indigo-600">⚙️ Chart Controls</h3>
 
-            <label className="block mb-2 font-semibold">X-axis:</label>
-            <select
-              value={xKey}
-              onChange={(e) => setXKey(e.target.value)}
-              className="w-full mb-4 p-2 border rounded"
-            >
-              <option value="">Select</option>
-              {keys.map((key) => (
-                <option key={key} value={key}>{key}</option>
-              ))}
-            </select>
-
-            <label className="block mb-2 font-semibold">Y-axis:</label>
-            <select
-              value={yKey}
-              onChange={(e) => setYKey(e.target.value)}
-              className="w-full mb-4 p-2 border rounded"
-            >
-              <option value="">Select</option>
-              {keys.map((key) => (
-                <option key={key} value={key}>{key}</option>
-              ))}
-            </select>
-
-            {mode === "2d" && (
-              <>
-                <label className="block mb-2 font-semibold">Chart Type:</label>
+            <div className="space-y-6">
+              <div>
+                <label className="block mb-2 font-semibold text-gray-700">Mode:</label>
                 <select
-                  value={chartType}
-                  onChange={(e) => setChartType(e.target.value)}
-                  className="w-full p-2 border rounded"
+                  value={mode}
+                  onChange={(e) => setMode(e.target.value)}
+                  className="input-field"
                 >
-                  <option value="bar">Bar</option>
-                  <option value="line">Line</option>
-                  <option value="pie">Pie</option>
-                  <option value="radar">Radar</option>
+                  <option value="2d">2D Charts</option>
+                  <option value="3d">3D Visualization</option>
                 </select>
-              </>
-            )}
+              </div>
+
+              <div>
+                <label className="block mb-2 font-semibold text-gray-700">X-axis:</label>
+                <select
+                  value={xKey}
+                  onChange={(e) => setXKey(e.target.value)}
+                  className="input-field"
+                >
+                  <option value="">Select Column</option>
+                  {keys.map((key) => (
+                    <option key={key} value={key}>{key}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block mb-2 font-semibold text-gray-700">Y-axis:</label>
+                <select
+                  value={yKey}
+                  onChange={(e) => setYKey(e.target.value)}
+                  className="input-field"
+                >
+                  <option value="">Select Column</option>
+                  {keys.map((key) => (
+                    <option key={key} value={key}>{key}</option>
+                  ))}
+                </select>
+              </div>
+
+              {mode === "2d" && (
+                <div>
+                  <label className="block mb-2 font-semibold text-gray-700">Chart Type:</label>
+                  <select
+                    value={chartType}
+                    onChange={(e) => setChartType(e.target.value)}
+                    className="input-field"
+                  >
+                  <option value="bar">Bar Chart</option>
+                  <option value="line">Line Chart</option>
+                  <option value="pie">Pie Chart</option>
+                  <option value="radar">Radar Chart</option>
+                  </select>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Chart */}
-          <div className="flex-grow bg-white p-6 rounded-lg shadow-md h-full flex items-center justify-center">
+          <div className="flex-grow card h-full flex items-center justify-center">
             {xKey && yKey ? (
-              <div className="w-full h-full">{renderChart()}</div>
+              <div className="w-full h-full p-4">
+                {renderChart()}
+              </div>
             ) : (
-              <p className="text-center text-sm text-gray-600">
-                Please select X and Y axes to view the chart.
-              </p>
+              <div className="text-center">
+                <div className="text-6xl mb-4 animate-bounce-gentle">📈</div>
+                <p className="text-lg text-gray-600 font-medium">
+                  Please select X and Y axes to view the chart
+                </p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Choose your data columns from the controls panel
+                </p>
+              </div>
             )}
           </div>
         </div>

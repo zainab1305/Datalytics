@@ -59,32 +59,46 @@ const UploadFile = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-r from-[#f3e5f5] to-[#e0c3fc] text-[#3e1f47]">
+    <div className="min-h-screen flex animate-fade-in">
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-md p-6 flex flex-col">
+      <div className="w-64 sidebar-card p-6 flex flex-col animate-slide-up">
         <div>
-          <h1 className="text-2xl font-bold mb-6 text-[#6a1b9a]">Datalytics</h1>
-          <button onClick={() => navigate("/dashboard")} className="w-full mb-4 bg-[#d1b3ff] hover:bg-[#c29eff] text-[#3e1f47] font-medium px-4 py-2 rounded">
+          <h1 className="text-3xl font-bold mb-8 text-gray-800">Datalytics</h1>
+          <button onClick={() => navigate("/dashboard")} className="w-full mb-4 btn-primary">
             Home
           </button>
-          <button onClick={() => navigate("/visualization")} className="w-full mb-4 bg-[#e1bee7] hover:bg-[#d7aef7] text-[#3e1f47] font-medium px-4 py-2 rounded">
+          <button onClick={() => navigate("/visualization")} className="w-full mb-4 btn-secondary">
             Visualize Data
           </button>
-          <button onClick={() => navigate("/uploadFile")} className="w-full mb-4 bg-[#f3d1f4] hover:bg-[#ecb3e5] text-[#3e1f47] font-medium px-4 py-2 rounded">
+          <button onClick={() => navigate("/uploadFile")} className="w-full mb-4 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-semibold py-3 px-4 rounded-lg shadow-md transform transition-all duration-200 hover:scale-105 hover:shadow-lg">
             Upload File
           </button>
         </div>
       </div>
 
       {/* Main Upload Section */}
-      <div className="flex-1 flex flex-col items-center justify-center p-10">
-        <h1 className="text-5xl font-extrabold mb-10 text-[#3e1f47]">Upload Excel File</h1>
+      <div className="flex-1 flex flex-col items-center justify-center p-10 animate-slide-up">
+        <h1 className="text-6xl font-bold mb-12 text-gray-800">
+          Upload Excel File
+        </h1>
 
         <label
           htmlFor="file-upload"
-          className="cursor-pointer w-full max-w-4xl h-64 bg-white border-4 border-dashed border-[#9c27b0] rounded-xl flex items-center justify-center text-2xl font-semibold text-[#9c27b0] hover:bg-[#f5ebfb] transition mb-8 shadow-lg"
+          className="cursor-pointer w-full max-w-4xl h-80 card flex items-center justify-center transition-all duration-300 hover:shadow-xl"
         >
-          {selectedFile ? selectedFile.name : "Click to select or drop your Excel file"}
+          {selectedFile ? (
+            <div className="text-center">
+              <div className="text-6xl mb-6 text-blue-500">✓</div>
+              <div className="text-2xl font-semibold text-gray-800">{selectedFile.name}</div>
+              <div className="text-sm text-gray-500 mt-2">File selected successfully!</div>
+            </div>
+          ) : (
+            <div className="text-center">
+              <div className="text-7xl mb-6 text-blue-400 animate-bounce-gentle">+</div>
+              <div className="text-2xl font-medium text-gray-700 mb-2">Click to select or drop your Excel file</div>
+              <div className="text-sm text-gray-500">Supported formats: .xlsx, .xls</div>
+            </div>
+          )}
           <input
             id="file-upload"
             type="file"
@@ -95,7 +109,7 @@ const UploadFile = () => {
 
         <button
           onClick={handleUpload}
-          className="bg-[#9c27b0] hover:bg-[#8e24aa] text-white font-semibold px-10 py-4 rounded-xl shadow-xl text-lg transition"
+          className="btn-primary text-xl px-12 py-5 mt-10"
         >
           Upload and Get AI Insight →
         </button>
@@ -103,15 +117,17 @@ const UploadFile = () => {
         {insight && (
           <div
             ref={insightRef}
-            className="max-w-4xl w-full bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-lg mt-12 shadow-xl"
+            className="card-subtle mt-12 max-w-4xl w-full animate-fade-in"
           >
-            <h3 className="text-xl font-bold mb-3 text-[#6a1b9a]">🧠 AI Insight Summary</h3>
-            <div className="whitespace-pre-wrap text-sm text-gray-800">
+            <h3 className="text-2xl font-bold mb-4 text-emerald-600">
+              AI Insight Summary
+            </h3>
+            <div className="whitespace-pre-wrap text-base text-gray-700 leading-relaxed">
               {insight.replace(/\*\*/g, "")}
             </div>
             <button
               onClick={() => navigate("/visualization")}
-              className="mt-4 bg-[#9c27b0] hover:bg-[#8e24aa] text-white font-semibold px-6 py-2 rounded"
+              className="mt-6 btn-secondary"
             >
               Proceed to Visualization →
             </button>

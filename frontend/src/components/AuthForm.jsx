@@ -43,66 +43,96 @@ function AuthForm() {
 
 
   return (
-    <div className="flex h-screen">
-      {/* Left Gradient Section */}
-      <div className="w-1/2 bg-gradient-to-r from-[#d7b4f3] via-[#eacdfc] to-[#f9eafc] flex flex-col justify-center items-center text-[#4a2d63] p-10">
-        <h1 className="text-5xl font-extrabold mb-4">Datalytics</h1>
-        <p className="text-lg text-center max-w-md">
-          Dive deep into your data and visualize insights in seconds.
-        </p>
+    <div className="flex h-screen bg-gradient-to-br from-slate-50 to-slate-100 animate-fade-in">
+      {/* Left Section */}
+      <div className="w-1/2 flex flex-col justify-center items-center bg-white p-12 animate-slide-up shadow-xl">
+        <div className="text-center max-w-lg">
+          <h1 className="text-7xl font-extrabold mb-6 bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+            Datalytics
+          </h1>
+          <p className="text-xl leading-relaxed text-slate-600 mb-8">
+            Transform your data into actionable insights with our advanced analytics platform.
+          </p>
+          <div className="flex justify-center space-x-4">
+            <div className="w-3 h-3 bg-slate-400 rounded-full animate-bounce-slow"></div>
+            <div className="w-3 h-3 bg-slate-500 rounded-full animate-bounce-slow" style={{animationDelay: '0.1s'}}></div>
+            <div className="w-3 h-3 bg-slate-600 rounded-full animate-bounce-slow" style={{animationDelay: '0.2s'}}></div>
+          </div>
+        </div>
       </div>
 
       {/* Right Auth Form */}
-      <div className="w-1/2 flex justify-center items-center bg-white">
-        <div className="bg-white rounded-xl shadow-lg p-10 w-full max-w-md text-center">
-          <h2 className="text-2xl font-bold mb-4">{isSignup ? "Sign Up" : "Login"}</h2>
+      <div className="w-1/2 flex justify-center items-center p-8 bg-slate-100">
+        <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg p-10 text-center animate-slide-up" style={{animationDelay: '0.2s'}}>
+          <div className="mb-8">
+            <h2 className="text-4xl font-bold mb-2 text-slate-800">
+              {isSignup ? "Create Account" : "Welcome Back"}
+            </h2>
+            <p className="text-slate-600">
+              {isSignup ? "Join our analytics community" : "Sign in to your account"}
+            </p>
+          </div>
 
-          {isSignup && (
-            <input
-              type="text"
-              placeholder="Your Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full mb-3 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300"
-            />
-          )}
+          <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-6">
+            {isSignup && (
+              <div className="animate-fade-in">
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-4 py-4 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all duration-200 bg-slate-50 hover:bg-white text-slate-800 placeholder-slate-500"
+                  required
+                />
+              </div>
+            )}
 
-          <input
-            type="email"
-            placeholder="Your Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full mb-3 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300"
-          />
+            <div className="animate-fade-in" style={{animationDelay: '0.1s'}}>
+              <input
+                type="email"
+                placeholder="Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-4 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all duration-200 bg-slate-50 hover:bg-white text-slate-800 placeholder-slate-500"
+                required
+              />
+            </div>
 
-          <input
-            type="password"
-            placeholder={isSignup ? "Create Password" : "Password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full mb-5 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300"
-          />
+            <div className="animate-fade-in" style={{animationDelay: '0.2s'}}>
+              <input
+                type="password"
+                placeholder={isSignup ? "Create Password" : "Password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-4 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all duration-200 bg-slate-50 hover:bg-white text-slate-800 placeholder-slate-500"
+                required
+              />
+            </div>
 
-          <button
-            onClick={handleSubmit}
-            className="w-full bg-[#c084fc] hover:bg-[#b26bfa] text-white py-3 rounded-lg font-semibold transition"
-          >
-            {isSignup ? "Create Account" : "Login"}
-          </button>
-
-          <p className="mt-4 text-sm text-gray-600">
-            {isSignup ? "Already have an account?" : "Don’t have an account?"}{" "}
-            <span
-              className="text-[#7e22ce] font-medium cursor-pointer hover:underline"
-              onClick={toggleForm}
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 hover:shadow-xl text-lg mt-8"
             >
-              {isSignup ? "Login" : "Sign Up"}
-            </span>
-          </p>
+              {isSignup ? "Create Account" : "Sign In"}
+            </button>
+          </form>
+
+          <div className="mt-8 pt-6 border-t border-slate-200">
+            <p className="text-sm text-slate-600">
+              {isSignup ? "Already have an account?" : "Don't have an account?"}{" "}
+              <span
+                className="text-blue-600 font-semibold cursor-pointer hover:text-blue-800 transition-colors duration-200 hover:underline"
+                onClick={toggleForm}
+              >
+                {isSignup ? "Sign in here" : "Sign up here"}
+              </span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
   );
+
 }
 
 export default AuthForm;

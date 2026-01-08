@@ -38,33 +38,33 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="h-screen flex bg-gradient-to-r from-[#f3e5f5] to-[#e0c3fc] text-[#3e1f47]">
+    <div className="h-screen flex animate-fade-in">
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-md p-6 flex flex-col justify-between">
+      <div className="w-64 sidebar-card p-6 flex flex-col justify-between animate-slide-up">
         <div>
-          <h1 className="text-2xl font-bold mb-6 text-[#6a1b9a]">Datalytics</h1>
+          <h1 className="text-3xl font-bold mb-8 text-gray-800">Datalytics</h1>
           <button
             onClick={() => navigate("/dashboard")}
-            className="w-full mb-4 bg-[#d1b3ff] hover:bg-[#c29eff] text-[#3e1f47] font-medium px-4 py-2 rounded"
+            className="w-full mb-4 btn-primary"
           >
             Home
           </button>
           <button
             onClick={() => navigate("/uploadFile")}
-            className="w-full mb-4 bg-[#e1bee7] hover:bg-[#d7aef7] text-[#3e1f47] font-medium px-4 py-2 rounded"
+            className="w-full mb-4 btn-secondary"
           >
             Upload File
           </button>
           <button
             onClick={() => navigate("/visualization")}
-            className="w-full mb-4 bg-[#f3d1f4] hover:bg-[#ecb3e5] text-[#3e1f47] font-medium px-4 py-2 rounded"
+            className="w-full mb-4 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-semibold py-3 px-4 rounded-lg shadow-md transform transition-all duration-200 hover:scale-105 hover:shadow-lg"
           >
             Visualize Data
           </button>
           {user?.email === "your_admin_email@gmail.com" && (
       <button
         onClick={() => navigate("/admin")}
-        className="w-full mb-4 bg-[#ffcdd2] hover:bg-[#ef9a9a] text-[#3e1f47] font-medium px-4 py-2 rounded"
+        className="w-full mb-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-3 px-4 rounded-lg shadow-md transform transition-all duration-200 hover:scale-105 hover:shadow-lg"
       >
         Admin Panel
       </button>
@@ -72,7 +72,7 @@ const Dashboard = () => {
         </div>
         <button
           onClick={() => navigate("/")}
-          className="w-full bg-[#f48fb1] hover:bg-[#f06292] text-white font-medium px-4 py-2 rounded"
+          className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-4 rounded-lg shadow-md transform transition-all duration-200 hover:scale-105 hover:shadow-lg"
         >
           Logout
         </button>
@@ -81,49 +81,49 @@ const Dashboard = () => {
       {/* Main Content */}
       <div className="flex-1 p-8 overflow-y-auto">
         {/* Welcome Header */}
-        <div className="mb-10">
-          <h2 className="text-4xl font-bold text-[#4a0072] mb-2">
-            Welcome to Datalytics 👋
+        <div className="mb-12 animate-slide-up">
+          <h2 className="text-5xl font-bold text-slate-800 mb-4 text-shadow">
+            Welcome to Datalytics
           </h2>
-          <p className="text-md text-gray-700">
+          <p className="text-lg text-slate-600">
             Here's your recent file upload history
           </p>
         </div>
 
         {/* User History Section */}
-        <h3 className="text-2xl font-semibold text-[#4a0072] mb-4">
-          📁 User Upload History
+        <h3 className="text-3xl font-semibold text-slate-800 mb-6 text-shadow animate-slide-up">
+          Upload History
         </h3>
 
-        <div className="bg-white rounded-xl shadow-xl p-6 h-[70vh] overflow-y-auto">
+        <div className="card h-[70vh] overflow-y-auto animate-slide-up">
           {uploadHistory.length === 0 ? (
-            <p className="text-gray-600 text-md">No uploads yet.</p>
+            <p className="text-gray-600 text-lg">No uploads yet.</p>
           ) : (
-            <ul className="space-y-4">
+            <ul className="space-y-6">
               {uploadHistory.map((upload) => (
                 <li
                   key={upload._id}
-                  className="p-4 border border-[#e0c3fc] rounded-lg cursor-pointer bg-[#fdf6ff] hover:bg-[#f6ebff]"
+                  className="p-6 border border-gray-200 rounded-lg cursor-pointer bg-gray-50 hover:bg-white transform transition-all duration-300 hover:shadow-md"
                   onClick={() => fetchPreview(upload._id)}
                 >
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="text-lg font-medium">{upload.fileName}</p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-xl font-semibold text-gray-800">{upload.fileName}</p>
+                      <p className="text-sm text-gray-500 mt-1">
                         {new Date(upload.uploadTime).toLocaleString()}
                       </p>
                     </div>
-                    <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
+                    <span className="text-sm bg-blue-100 text-blue-700 px-4 py-2 rounded-full font-medium shadow-sm">
                       Tap to preview
                     </span>
                   </div>
 
                   {activePreviewId === upload._id && previewData && (
-                    <div className="mt-4 bg-purple-50 p-3 rounded text-sm text-gray-700">
-                      <h4 className="font-semibold text-[#6a1b9a] mb-2">Preview:</h4>
-                      <ul className="list-disc ml-4 space-y-1">
+                    <div className="mt-6 bg-blue-50 p-4 rounded-lg text-sm text-gray-700 animate-fade-in">
+                      <h4 className="font-bold text-blue-800 mb-3 text-lg">Preview:</h4>
+                      <ul className="list-disc ml-6 space-y-2">
                         {previewData.map((line, idx) => (
-                          <li key={idx}>{JSON.stringify(line)}</li>
+                          <li key={idx} className="text-gray-700">{JSON.stringify(line)}</li>
                         ))}
                       </ul>
                     </div>
