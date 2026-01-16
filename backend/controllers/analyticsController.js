@@ -66,7 +66,7 @@ export const login = async (req, res) => {
 };
 
 // ===================
-// EXCEL UPLOAD CONTROLLER
+// FILE UPLOAD CONTROLLER
 // ===================
 export const analyzeExcel = async (req, res) => {
   try {
@@ -76,11 +76,27 @@ export const analyzeExcel = async (req, res) => {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    const workbook = XLSX.read(file.buffer, { type: "buffer" });
-    const sheetName = workbook.SheetNames[0];
-    const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    let sheetData;
+    if (file.mimetype === 'text/csv' || file.originalname.endsWith('.csv')) {
+      // Handle CSV
+      const csvText = file.buffer.toString('utf8');
+      const workbook = XLSX.read(csvText, { type: 'string' });
+      const sheetName = workbook.SheetNames[0];
+      sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    } else {
+      // Handle Excel
+      const workbook = XLSX.read(file.buffer, { type: "buffer" });
+      const sheetName = workbook.SheetNames[0];
+      sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    }
+
+    // Limit to first 1000 rows for performance
+    const originalLength = sheetData.length;
+    if (sheetData.length > 1000) {
+      sheetData = sheetData.slice(0, 1000);
+    }
+
     console.log("📩 Received upload from userEmail:", req.body.userEmail || req.headers["user-email"]);
-    console.log("📩 Received upload from userEmail:", req.headers["user-email"]);
 
     // ✅ Save upload with preview rows
    const userEmail =
@@ -94,7 +110,7 @@ await Upload.create({
 
 
     res.status(200).json({
-      message: "File uploaded and parsed successfully",
+      message: originalLength > 1000 ? "File uploaded and parsed successfully (limited to first 1000 rows for performance)" : "File uploaded and parsed successfully",
       data: sheetData,
     });
   } catch (error) {

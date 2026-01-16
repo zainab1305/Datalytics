@@ -3,14 +3,14 @@ import { Routes, Route } from "react-router-dom";  // Remove BrowserRouter from 
 import AuthForm from "./components/AuthForm";
 import Dashboard from "./components/Dashboard";
 import Visualization from "./components/Visualization";
-import ExcelDataContext from "./components/ExcelDataContext";
+import DataContext from "./components/DataContext";
 import UploadFile from "./components/UploadFile";
 import AdminPanel from "./components/AdminPanel";
 function App() {
-  const [excelData, setExcelData] = useState([]);
+  const [data, setData] = useState([]);
 
   return (
-    <ExcelDataContext.Provider value={{ excelData, setExcelData }}>
+    <DataContext.Provider value={{ data, setData }}>
       <Routes>
         <Route path="/" element={<AuthForm />} />
         <Route path="/dashboard" element={<Dashboard />} />
@@ -18,7 +18,7 @@ function App() {
         <Route path="/uploadFile" element={<UploadFile/>}/>
         <Route path="/admin" element={<AdminPanel />} />
       </Routes>
-    </ExcelDataContext.Provider>
+    </DataContext.Provider>
   );
 }
 

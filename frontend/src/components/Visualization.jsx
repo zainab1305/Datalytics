@@ -13,7 +13,7 @@ import {
   RadialLinearScale,
 } from "chart.js";
 import { Bar, Line, Pie, Radar } from "react-chartjs-2";
-import ExcelDataContext from "./ExcelDataContext";
+import DataContext from "./DataContext";
 import { useNavigate } from "react-router-dom";
 import html2canvas from "html2canvas";
 import { Canvas } from "@react-three/fiber";
@@ -71,7 +71,7 @@ const Bar3D = ({ data, labels }) => {
 };
 
 const Visualization = () => {
-  const { excelData } = useContext(ExcelDataContext);
+  const { data } = useContext(DataContext);
   const [xKey, setXKey] = useState("");
   const [yKey, setYKey] = useState("");
   const [chartType, setChartType] = useState("bar");
@@ -79,7 +79,7 @@ const Visualization = () => {
   const navigate = useNavigate();
   const chartRef = useRef(null);
 
-  if (excelData.length === 0) {
+  if (data.length === 0) {
     return (
       <div className="h-screen flex items-center justify-center animate-fade-in">
         <div className="card text-center p-12 max-w-md">
@@ -97,14 +97,14 @@ const Visualization = () => {
     );
   }
 
-  const keys = Object.keys(excelData[0]);
+  const keys = Object.keys(data[0]);
 
   const chartData = {
-    labels: excelData.map((row) => row[xKey]),
+    labels: data.map((row) => row[xKey]),
     datasets: [
       {
         label: `${yKey} vs ${xKey}`,
-        data: excelData.map((row) => parseFloat(row[yKey])),
+        data: data.map((row) => parseFloat(row[yKey])),
         backgroundColor: [
           "rgba(59, 130, 246, 0.8)", // Blue
           "rgba(16, 185, 129, 0.8)", // Emerald
@@ -145,8 +145,8 @@ const Visualization = () => {
       return (
         <div className="w-full h-full">
           <Bar3D
-            data={excelData.map((row) => parseFloat(row[yKey]))}
-            labels={excelData.map((row) => row[xKey])}
+            data={data.map((row) => parseFloat(row[yKey]))}
+            labels={data.map((row) => row[xKey])}
           />
         </div>
       );

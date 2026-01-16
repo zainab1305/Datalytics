@@ -12,9 +12,9 @@ const router = express.Router();
 
 // Set up Multer for file uploads
 const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } }); // 10MB limit
 
-// POST route: Upload and analyze Excel
+// POST route: Upload and analyze Excel/CSV
 router.post("/upload", upload.single("file"), (req, res, next) => {
   console.log("➡️ Received userEmail:", req.body.userEmail); // ✅ Debug
   analyzeExcel(req, res); // hand off

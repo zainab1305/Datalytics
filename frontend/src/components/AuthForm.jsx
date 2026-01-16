@@ -132,7 +132,6 @@ function AuthForm() {
       </div>
     </div>
   );
-
 }
 
 export default AuthForm;

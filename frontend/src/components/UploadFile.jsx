@@ -1,7 +1,7 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import ExcelDataContext from "./ExcelDataContext";
+import DataContext from "./DataContext";
 
 
 const UploadFile = () => {
@@ -9,7 +9,7 @@ const UploadFile = () => {
   const user = JSON.parse(localStorage.getItem("user")) || {};
   const [insight, setInsight] = useState("");
   const insightRef = useRef();
-  const { setExcelData } = useContext(ExcelDataContext);
+  const { setData } = useContext(DataContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,7 +21,6 @@ const UploadFile = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
-    if (file) alert("✅ File uploaded successfully!");
   };
 
   const handleUpload = async () => {
@@ -45,7 +44,9 @@ const UploadFile = () => {
 );
 
       const sheetData = res.data.data;
-      setExcelData(sheetData);
+      setData(sheetData);
+
+      alert(res.data.message);
 
       const aiRes = await axios.post("http://localhost:5001/api/analytics/insight", {
         sheetData,
@@ -79,7 +80,7 @@ const UploadFile = () => {
       {/* Main Upload Section */}
       <div className="flex-1 flex flex-col items-center justify-center p-10 animate-slide-up">
         <h1 className="text-6xl font-bold mb-12 text-gray-800">
-          Upload Excel File
+          Upload File
         </h1>
 
         <label
@@ -96,12 +97,13 @@ const UploadFile = () => {
             <div className="text-center">
               <div className="text-7xl mb-6 text-blue-400 animate-bounce-gentle">+</div>
               <div className="text-2xl font-medium text-gray-700 mb-2">Click to select or drop your Excel file</div>
-              <div className="text-sm text-gray-500">Supported formats: .xlsx, .xls</div>
+              <div className="text-sm text-gray-500">Supported formats: .xlsx, .xls, .csv</div>
             </div>
           )}
           <input
             id="file-upload"
             type="file"
+            accept=".xlsx,.xls,.csv"
             className="hidden"
             onChange={handleFileChange}
           />
