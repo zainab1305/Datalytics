@@ -2,15 +2,20 @@ import React, { useState, useContext, useRef, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import DataContext from "./DataContext";
-
+import Layout from "./Layout";
+import { useToast } from "../contexts/ToastContext";
+import { Upload, FileSpreadsheet, Sparkles, ArrowRight } from "lucide-react";
 
 const UploadFile = () => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [dragActive, setDragActive] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const user = JSON.parse(localStorage.getItem("user")) || {};
   const [insight, setInsight] = useState("");
   const insightRef = useRef();
   const { setData } = useContext(DataContext);
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (insight && insightRef.current) {
@@ -20,123 +25,172 @@ const UploadFile = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setSelectedFile(file);
+    if (file) setSelectedFile(file);
+  };
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(true);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    const file = e.dataTransfer?.files?.[0];
+    if (file && /\.(xlsx|xls|csv)$/i.test(file.name)) {
+      setSelectedFile(file);
+    } else {
+      showToast("Please drop an Excel or CSV file", "warning");
+    }
   };
 
   const handleUpload = async () => {
-    if (!selectedFile) return alert("Please select a file");
+    if (!selectedFile) {
+      showToast("Please select a file first", "warning");
+      return;
+    }
 
-    console.log("Uploading as:", user.email);
-
+    setUploading(true);
     const formData = new FormData();
     formData.append("file", selectedFile);
 
     try {
       const res = await axios.post(
-  "http://localhost:5001/api/analytics/upload",
-  formData,
-  {
-    headers: {
-      "Content-Type": "multipart/form-data",
-      "user-email": user.email, // ✅ Send email in headers!
-    },
-  }
-);
+        "http://localhost:5001/api/analytics/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "user-email": user.email,
+          },
+        }
+      );
 
       const sheetData = res.data.data;
       setData(sheetData);
-
-      alert(res.data.message);
+      showToast(res.data.message || "Upload successful!", "success");
 
       const aiRes = await axios.post("http://localhost:5001/api/analytics/insight", {
         sheetData,
       });
-
       setInsight(aiRes.data.summary);
     } catch (err) {
       console.error("Upload error:", err);
-      alert("❌ Upload failed");
+      showToast(err.response?.data?.message || "Upload failed", "error");
+    } finally {
+      setUploading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex animate-fade-in">
-      {/* Sidebar */}
-      <div className="w-64 sidebar-card p-6 flex flex-col animate-slide-up">
-        <div>
-          <h1 className="text-3xl font-bold mb-8 text-gray-800">Datalytics</h1>
-          <button onClick={() => navigate("/dashboard")} className="w-full mb-4 btn-primary">
-            Home
-          </button>
-          <button onClick={() => navigate("/visualization")} className="w-full mb-4 btn-secondary">
-            Visualize Data
-          </button>
-          <button onClick={() => navigate("/uploadFile")} className="w-full mb-4 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-semibold py-3 px-4 rounded-lg shadow-md transform transition-all duration-200 hover:scale-105 hover:shadow-lg">
-            Upload File
+    <Layout>
+      <div className="p-6 lg:p-10 max-w-4xl mx-auto">
+        <div className="mb-10 animate-slide-up">
+          <h1 className="text-3xl lg:text-4xl font-bold text-zinc-100 mb-2">
+            Upload your data
+          </h1>
+          <p className="text-zinc-500">
+            Drag & drop or select an Excel (.xlsx, .xls) or CSV file
+          </p>
+        </div>
+
+        <div className="space-y-8 animate-slide-up">
+          {/* Drop zone */}
+          <label
+            htmlFor="file-upload"
+            onDragEnter={handleDrag}
+            onDragLeave={() => setDragActive(false)}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+            className={`
+              block cursor-pointer rounded-2xl border-2 border-dashed p-12 lg:p-16
+              transition-all duration-300 text-center
+              ${dragActive
+                ? "border-indigo-500 bg-indigo-500/10"
+                : selectedFile
+                ? "border-emerald-500/50 bg-emerald-500/5"
+                : "border-white/10 hover:border-indigo-500/50 hover:bg-white/5"
+              }
+            `}
+          >
+            <input
+              id="file-upload"
+              type="file"
+              accept=".xlsx,.xls,.csv"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            {selectedFile ? (
+              <div>
+                <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                  <FileSpreadsheet className="w-8 h-8 text-emerald-400" />
+                </div>
+                <p className="text-xl font-semibold text-zinc-200">{selectedFile.name}</p>
+                <p className="text-sm text-zinc-500 mt-1">{(selectedFile.size / 1024).toFixed(1)} KB</p>
+                <p className="text-sm text-indigo-400 mt-2">Click or drop another file to replace</p>
+              </div>
+            ) : (
+              <div>
+                <div className="w-16 h-16 rounded-2xl bg-indigo-500/20 flex items-center justify-center mx-auto mb-4">
+                  <Upload className="w-8 h-8 text-indigo-400" />
+                </div>
+                <p className="text-lg font-medium text-zinc-300 mb-1">Drop your file here</p>
+                <p className="text-sm text-zinc-500">or click to browse · .xlsx, .xls, .csv</p>
+              </div>
+            )}
+          </label>
+
+          <button
+            onClick={handleUpload}
+            disabled={!selectedFile || uploading}
+            className="w-full btn-primary py-4 text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {uploading ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Processing & generating AI insights...
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-5 h-5" />
+                Upload and get AI insight
+              </>
+            )}
           </button>
         </div>
-      </div>
-
-      {/* Main Upload Section */}
-      <div className="flex-1 flex flex-col items-center justify-center p-10 animate-slide-up">
-        <h1 className="text-6xl font-bold mb-12 text-gray-800">
-          Upload File
-        </h1>
-
-        <label
-          htmlFor="file-upload"
-          className="cursor-pointer w-full max-w-4xl h-80 card flex items-center justify-center transition-all duration-300 hover:shadow-xl"
-        >
-          {selectedFile ? (
-            <div className="text-center">
-              <div className="text-6xl mb-6 text-blue-500">✓</div>
-              <div className="text-2xl font-semibold text-gray-800">{selectedFile.name}</div>
-              <div className="text-sm text-gray-500 mt-2">File selected successfully!</div>
-            </div>
-          ) : (
-            <div className="text-center">
-              <div className="text-7xl mb-6 text-blue-400 animate-bounce-gentle">+</div>
-              <div className="text-2xl font-medium text-gray-700 mb-2">Click to select or drop your Excel file</div>
-              <div className="text-sm text-gray-500">Supported formats: .xlsx, .xls, .csv</div>
-            </div>
-          )}
-          <input
-            id="file-upload"
-            type="file"
-            accept=".xlsx,.xls,.csv"
-            className="hidden"
-            onChange={handleFileChange}
-          />
-        </label>
-
-        <button
-          onClick={handleUpload}
-          className="btn-primary text-xl px-12 py-5 mt-10"
-        >
-          Upload and Get AI Insight →
-        </button>
 
         {insight && (
           <div
             ref={insightRef}
-            className="card-subtle mt-12 max-w-4xl w-full animate-fade-in"
+            className="card mt-12 animate-fade-in"
           >
-            <h3 className="text-2xl font-bold mb-4 text-emerald-600">
-              AI Insight Summary
-            </h3>
-            <div className="whitespace-pre-wrap text-base text-gray-700 leading-relaxed">
-              {insight.replace(/\*\*/g, "")}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-cyan-400" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-zinc-100">AI insight summary</h3>
+                <p className="text-sm text-zinc-500">Powered by your data</p>
+              </div>
+            </div>
+            <div className="prose prose-invert max-w-none">
+              <div className="text-zinc-300 leading-relaxed whitespace-pre-wrap">
+                {insight.replace(/\*\*/g, "")}
+              </div>
             </div>
             <button
               onClick={() => navigate("/visualization")}
-              className="mt-6 btn-secondary"
+              className="mt-6 btn-secondary inline-flex items-center gap-2"
             >
-              Proceed to Visualization →
+              Proceed to visualization
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         )}
       </div>
-    </div>
+    </Layout>
   );
 };
 
