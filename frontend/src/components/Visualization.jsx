@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useRef, useMemo } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,6 +14,7 @@ import {
 } from "chart.js";
 import { Bar, Line, Pie, Radar } from "react-chartjs-2";
 import DataContext from "./DataContext";
+import { useTheme } from "../contexts/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import html2canvas from "html2canvas";
 import { Canvas } from "@react-three/fiber";
@@ -38,37 +39,52 @@ const chartColors = [
   "#6366f1", "#22d3ee", "#10b981", "#f59e0b", "#ef4444", "#a855f7", "#ec4899", "#06b6d4"
 ];
 
-const chartOptions = {
+const getChartOptions = (isDarkMode) => ({
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      labels: { color: "#a1a1aa", font: { family: "Outfit" } },
+      labels: {
+        color: isDarkMode ? "#a1a1aa" : "#52525b",
+        font: { family: "Outfit" }
+      },
     },
     tooltip: {
-      backgroundColor: "rgba(28, 28, 38, 0.95)",
-      titleColor: "#f4f4f5",
-      bodyColor: "#a1a1aa",
-      borderColor: "rgba(255,255,255,0.1)",
+      backgroundColor: isDarkMode ? "rgba(28, 28, 38, 0.95)" : "rgba(255, 255, 255, 0.95)",
+      titleColor: isDarkMode ? "#f4f4f5" : "#18181b",
+      bodyColor: isDarkMode ? "#a1a1aa" : "#52525b",
+      borderColor: isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
       borderWidth: 1,
     },
   },
   scales: {
     x: {
-      ticks: { color: "#71717a", font: { size: 11 } },
-      grid: { color: "rgba(255,255,255,0.05)" },
+      ticks: {
+        color: isDarkMode ? "#71717a" : "#71717a",
+        font: { size: 11 }
+      },
+      grid: { color: isDarkMode ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)" },
     },
     y: {
-      ticks: { color: "#71717a", font: { size: 11 } },
-      grid: { color: "rgba(255,255,255,0.05)" },
+      ticks: {
+        color: isDarkMode ? "#71717a" : "#71717a",
+        font: { size: 11 }
+      },
+      grid: { color: isDarkMode ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)" },
     },
   },
-};
+});
 
-const Bar3D = ({ data, labels }) => {
+const Bar3D = ({ data, labels, isDarkMode }) => {
   const colors = chartColors;
   return (
-    <Canvas camera={{ position: [5, 5, 10], fov: 50 }} className="rounded-xl bg-zinc-900/50">
+    <Canvas
+      camera={{ position: [5, 5, 10], fov: 50 }}
+      className="rounded-xl"
+      style={{
+        backgroundColor: isDarkMode ? "rgba(24, 24, 27, 0.5)" : "rgba(250, 250, 250, 0.5)"
+      }}
+    >
       <ambientLight intensity={0.6} />
       <directionalLight position={[0, 5, 5]} intensity={1.5} />
       <OrbitControls />
@@ -81,7 +97,7 @@ const Bar3D = ({ data, labels }) => {
           <Text
             position={[0, -0.8, 0]}
             fontSize={0.4}
-            color="#a1a1aa"
+            color={isDarkMode ? "#a1a1aa" : "#52525b"}
             anchorX="center"
             anchorY="middle"
           >
@@ -95,12 +111,15 @@ const Bar3D = ({ data, labels }) => {
 
 const Visualization = () => {
   const { data } = useContext(DataContext);
+  const { theme } = useTheme();
+  const isDarkMode = theme === "dark";
   const [xKey, setXKey] = useState("");
   const [yKey, setYKey] = useState("");
   const [chartType, setChartType] = useState("bar");
   const [mode, setMode] = useState("2d");
   const navigate = useNavigate();
   const chartRef = useRef(null);
+  const chartOptions = useMemo(() => getChartOptions(isDarkMode), [isDarkMode]);
 
   if (data.length === 0) {
     return (
@@ -110,8 +129,8 @@ const Visualization = () => {
             <div className="w-20 h-20 rounded-2xl bg-indigo-500/20 flex items-center justify-center mx-auto mb-6">
               <BarChart3 className="w-10 h-10 text-indigo-400" />
             </div>
-            <h2 className="text-2xl font-bold text-zinc-100 mb-3">No data available</h2>
-            <p className="text-zinc-500 mb-8">
+            <h2 className="text-2xl font-bold text-color-primary mb-3">No data available</h2>
+            <p className="text-color-secondary mb-8">
               Upload a file from the dashboard to visualize your data.
             </p>
             <button onClick={() => navigate("/uploadFile")} className="btn-primary">
@@ -146,6 +165,7 @@ const Visualization = () => {
           <Bar3D
             data={data.map((row) => parseFloat(row[yKey]))}
             labels={data.map((row) => row[xKey])}
+            isDarkMode={isDarkMode}
           />
         </div>
       );
@@ -178,8 +198,8 @@ const Visualization = () => {
       <div className="p-6 lg:p-10">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8 animate-slide-up">
           <div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-zinc-100">Data visualization</h1>
-            <p className="text-zinc-500">Build charts from your uploaded data</p>
+            <h1 className="text-2xl lg:text-3xl font-bold text-color-primary">Data visualization</h1>
+            <p className="text-color-secondary">Build charts from your uploaded data</p>
           </div>
           <button
             onClick={handleDownload}
@@ -194,13 +214,13 @@ const Visualization = () => {
           {/* Controls */}
           <div className="lg:w-80 flex-shrink-0">
             <div className="card p-6 sticky top-24">
-              <h3 className="text-lg font-bold text-zinc-200 mb-6 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-color-primary mb-6 flex items-center gap-2">
                 <Settings2 className="w-5 h-5 text-indigo-400" />
                 Chart controls
               </h3>
               <div className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-zinc-400 mb-2">Mode</label>
+                  <label className="block text-sm font-medium text-color-secondary mb-2">Mode</label>
                   <select
                     value={mode}
                     onChange={(e) => setMode(e.target.value)}
@@ -211,7 +231,7 @@ const Visualization = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-400 mb-2">X-axis</label>
+                  <label className="block text-sm font-medium text-color-secondary mb-2">X-axis</label>
                   <select
                     value={xKey}
                     onChange={(e) => setXKey(e.target.value)}
@@ -224,7 +244,7 @@ const Visualization = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-400 mb-2">Y-axis</label>
+                  <label className="block text-sm font-medium text-color-secondary mb-2">Y-axis</label>
                   <select
                     value={yKey}
                     onChange={(e) => setYKey(e.target.value)}
@@ -238,7 +258,7 @@ const Visualization = () => {
                 </div>
                 {mode === "2d" && (
                   <div>
-                    <label className="block text-sm font-medium text-zinc-400 mb-2">Chart type</label>
+                    <label className="block text-sm font-medium text-color-secondary mb-2">Chart type</label>
                     <select
                       value={chartType}
                       onChange={(e) => setChartType(e.target.value)}
@@ -267,8 +287,8 @@ const Visualization = () => {
                   <div className="w-16 h-16 rounded-2xl bg-indigo-500/20 flex items-center justify-center mx-auto mb-4 animate-bounce-gentle">
                     <BarChart3 className="w-8 h-8 text-indigo-400" />
                   </div>
-                  <p className="text-zinc-400 font-medium">Select X and Y axes to view the chart</p>
-                  <p className="text-sm text-zinc-500 mt-1">Choose columns from the controls panel</p>
+                  <p className="text-color-secondary font-medium">Select X and Y axes to view the chart</p>
+                  <p className="text-sm text-color-muted mt-1">Choose columns from the controls panel</p>
                 </div>
               )}
             </div>

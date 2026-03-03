@@ -60,7 +60,7 @@ export default function Layout({ children }) {
                     w-full flex items-center gap-3 py-3 px-4 rounded-xl font-medium transition-all duration-200
                     ${isActive
                       ? "bg-indigo-500/20 text-indigo-400 border border-indigo-500/30"
-                      : "text-zinc-400 hover:bg-white/5 hover:text-zinc-200 border border-transparent"
+                      : "text-color-secondary hover:bg-hover-light hover:text-color-primary border border-transparent"
                     }
                   `}
                 >
@@ -88,7 +88,7 @@ export default function Layout({ children }) {
         <div className="space-y-3">
           <button
             onClick={toggleTheme}
-            className="w-full flex items-center gap-3 py-3 px-4 rounded-xl font-medium text-zinc-400 hover:bg-white/5 hover:text-zinc-200 transition-all duration-200"
+            className="w-full flex items-center gap-3 py-3 px-4 rounded-xl font-medium text-color-secondary hover:bg-hover-light hover:text-color-primary transition-all duration-200"
           >
             {theme === "dark" ? (
               <>
@@ -108,7 +108,7 @@ export default function Layout({ children }) {
               navigate("/");
               setSidebarOpen(false);
             }}
-            className="w-full flex items-center gap-3 py-3 px-4 rounded-xl font-medium text-zinc-400 hover:bg-red-500/10 hover:text-red-400 border border-transparent hover:border-red-500/20 transition-all duration-200"
+            className="w-full flex items-center gap-3 py-3 px-4 rounded-xl font-medium text-color-secondary hover:bg-red-500/10 hover:text-red-400 border border-transparent hover:border-red-500/20 transition-all duration-200"
           >
             <LogOut className="w-5 h-5" />
             Logout

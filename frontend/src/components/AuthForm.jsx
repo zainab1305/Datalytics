@@ -54,7 +54,7 @@ function AuthForm() {
           <h1 className="text-5xl xl:text-6xl font-bold text-gradient mb-6">
             Datalytics
           </h1>
-          <p className="text-xl text-zinc-400 max-w-md leading-relaxed mb-12">
+          <p className="text-xl text-color-secondary max-w-md leading-relaxed mb-12">
             Transform raw data into stunning visualizations and actionable insights with AI-powered analytics.
           </p>
           <div className="flex gap-8">
@@ -68,7 +68,7 @@ function AuthForm() {
                 className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10"
               >
                 <Icon className="w-5 h-5 text-indigo-400" />
-                <span className="text-zinc-300 font-medium">{label}</span>
+                <span className="text-color-secondary font-medium">{label}</span>
               </div>
             ))}
           </div>
@@ -84,10 +84,10 @@ function AuthForm() {
 
           <div className="glass-effect p-8 lg:p-10 rounded-3xl border border-white/10">
             <div className="mb-8">
-              <h2 className="text-2xl lg:text-3xl font-bold text-zinc-100 mb-2">
+              <h2 className="text-2xl lg:text-3xl font-bold text-color-primary mb-2">
                 {isSignup ? "Create your account" : "Welcome back"}
               </h2>
-              <p className="text-zinc-500">
+              <p className="text-color-secondary">
                 {isSignup
                   ? "Join thousands analyzing data smarter"
                   : "Sign in to continue to your dashboard"}
@@ -97,7 +97,7 @@ function AuthForm() {
             <form onSubmit={handleSubmit} className="space-y-5">
               {isSignup && (
                 <div>
-                  <label className="block text-sm font-medium text-zinc-400 mb-2">Full name</label>
+                  <label className="block text-sm font-medium text-color-secondary mb-2">Full name</label>
                   <input
                     type="text"
                     placeholder="John Doe"
@@ -110,7 +110,7 @@ function AuthForm() {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-2">Email</label>
+                <label className="block text-sm font-medium text-color-secondary mb-2">Email</label>
                 <input
                   type="email"
                   placeholder="you@example.com"
@@ -122,7 +122,7 @@ function AuthForm() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-2">
+                <label className="block text-sm font-medium text-color-secondary mb-2">
                   {isSignup ? "Password" : "Password"}
                 </label>
                 <input
@@ -145,7 +145,7 @@ function AuthForm() {
             </form>
 
             <div className="mt-6 pt-6 border-t border-white/10">
-              <p className="text-sm text-zinc-500 text-center">
+              <p className="text-sm text-color-secondary text-center">
                 {isSignup ? "Already have an account?" : "Don't have an account?"}{" "}
                 <button
                   type="button"

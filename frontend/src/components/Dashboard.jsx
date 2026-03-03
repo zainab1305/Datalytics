@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Layout from "./Layout";
 import DataContext from "./DataContext";
-import { FileSpreadsheet, BarChart3, Clock, ChevronDown, ChevronUp } from "lucide-react";
+import { FileSpreadsheet, BarChart3, TrendingUp, Plus, ArrowRight } from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -43,120 +43,168 @@ const Dashboard = () => {
     }
   };
 
+  const recentUploads = uploadHistory.slice(0, 5);
+
   return (
     <Layout>
-      <div className="p-6 lg:p-10 max-w-6xl mx-auto">
-        <div className="mb-10 animate-slide-up">
-          <h1 className="text-3xl lg:text-4xl font-bold text-zinc-100 mb-2">
-            Welcome back{user.name ? `, ${user.name.split(" ")[0]}` : ""}
-          </h1>
-          <p className="text-zinc-500">Here's your recent file upload history</p>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10 animate-slide-up">
-          <div className="card p-6 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center">
-              <FileSpreadsheet className="w-6 h-6 text-indigo-400" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-zinc-100">{uploadHistory.length}</p>
-              <p className="text-sm text-zinc-500">Total uploads</p>
-            </div>
+      <div className="min-h-screen p-6 lg:p-10">
+        <div className="max-w-7xl mx-auto">
+          {/* Header Section */}
+          <div className="mb-12 animate-slide-up">
+            <h1 className="text-4xl lg:text-5xl font-bold text-color-primary mb-3">
+              Welcome back{user.name ? `, ${user.name.split(" ")[0]}` : ""}!
+            </h1>
+            <p className="text-lg text-color-secondary">Transform your data into actionable insights</p>
           </div>
-          <div
-            onClick={() => navigate("/uploadFile")}
-            className="card p-6 flex items-center gap-4 cursor-pointer hover:border-indigo-500/30 transition-colors"
-          >
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-              <FileSpreadsheet className="w-6 h-6 text-emerald-400" />
-            </div>
-            <div>
-              <p className="font-semibold text-zinc-200">Upload new file</p>
-              <p className="text-sm text-zinc-500">Excel, CSV supported</p>
-            </div>
-          </div>
-          <div
-            onClick={() => navigate("/visualization")}
-            className="card p-6 flex items-center gap-4 cursor-pointer hover:border-indigo-500/30 transition-colors"
-          >
-            <div className="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center">
-              <BarChart3 className="w-6 h-6 text-cyan-400" />
-            </div>
-            <div>
-              <p className="font-semibold text-zinc-200">Visualize data</p>
-              <p className="text-sm text-zinc-500">Charts & 3D views</p>
-            </div>
-          </div>
-        </div>
 
-        {/* Upload History */}
-        <div className="animate-slide-up">
-          <h2 className="text-xl font-bold text-zinc-200 mb-6 flex items-center gap-2">
-            <Clock className="w-5 h-5 text-zinc-500" />
-            Upload history
-          </h2>
-
-          <div className="card overflow-hidden">
-            {loading ? (
-              <div className="p-12 text-center">
-                <div className="w-12 h-12 border-2 border-indigo-500/50 border-t-indigo-400 rounded-full animate-spin mx-auto mb-4" />
-                <p className="text-zinc-500">Loading your uploads...</p>
-              </div>
-            ) : uploadHistory.length === 0 ? (
-              <div className="p-16 text-center">
-                <div className="w-20 h-20 rounded-2xl bg-zinc-800/50 flex items-center justify-center mx-auto mb-6">
-                  <FileSpreadsheet className="w-10 h-10 text-zinc-600" />
+          {/* Quick Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-12 animate-slide-up">
+            {/* Total Uploads */}
+            <div className="card p-6 backdrop-blur-xl hover:shadow-lg transition-all duration-300">
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center">
+                  <FileSpreadsheet className="w-6 h-6 text-indigo-400" />
                 </div>
-                <h3 className="text-xl font-semibold text-zinc-300 mb-2">No uploads yet</h3>
-                <p className="text-zinc-500 mb-6 max-w-sm mx-auto">
-                  Upload your first Excel or CSV file to get started with AI insights and visualizations.
+                <span className="text-xs font-medium text-indigo-400 bg-indigo-500/20 px-2 py-1 rounded-lg">
+                  {uploadHistory.length} total
+                </span>
+              </div>
+              <p className="text-3xl font-bold text-color-primary mb-1">{uploadHistory.length}</p>
+              <p className="text-sm text-color-secondary">Files uploaded</p>
+            </div>
+
+            {/* Quick Upload */}
+            <button
+              onClick={() => navigate("/uploadFile")}
+              className="card p-6 backdrop-blur-xl hover:shadow-lg transition-all duration-300 hover:border-indigo-500/50 group"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center group-hover:bg-emerald-500/30 transition-colors">
+                  <Plus className="w-6 h-6 text-emerald-400" />
+                </div>
+                <ArrowRight className="w-5 h-5 text-color-secondary group-hover:text-emerald-400 transition-colors" />
+              </div>
+              <p className="text-xl font-bold text-color-primary text-start">Upload</p>
+              <p className="text-sm text-color-secondary text-start">New file</p>
+            </button>
+
+            {/* Quick Visualize */}
+            <button
+              onClick={() => navigate("/visualization")}
+              className="card p-6 backdrop-blur-xl hover:shadow-lg transition-all duration-300 hover:border-cyan-500/50 group"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center group-hover:bg-cyan-500/30 transition-colors">
+                  <BarChart3 className="w-6 h-6 text-cyan-400" />
+                </div>
+                <ArrowRight className="w-5 h-5 text-color-secondary group-hover:text-cyan-400 transition-colors" />
+              </div>
+              <p className="text-xl font-bold text-color-primary text-start">Visualize</p>
+              <p className="text-sm text-color-secondary text-start">Charts & 3D</p>
+            </button>
+
+            {/* Insights */}
+            <div className="card p-6 backdrop-blur-xl hover:shadow-lg transition-all duration-300">
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
+                  <TrendingUp className="w-6 h-6 text-purple-400" />
+                </div>
+                <span className="text-xs font-medium text-purple-400 bg-purple-500/20 px-2 py-1 rounded-lg">
+                  AI Powered
+                </span>
+              </div>
+              <p className="text-lg font-bold text-color-primary mb-1">Insights</p>
+              <p className="text-sm text-color-secondary">Auto-generated</p>
+            </div>
+          </div>
+
+          {/* Recent Activity */}
+          <div className="animate-slide-up">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-color-primary">Recent uploads</h2>
+              {uploadHistory.length > 5 && (
+                <button
+                  onClick={() => navigate("/uploadFile")}
+                  className="text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+                >
+                  View all →
+                </button>
+              )}
+            </div>
+
+            {loading ? (
+              <div className="card p-12 text-center">
+                <div className="w-12 h-12 border-2 border-indigo-500/50 border-t-indigo-400 rounded-full animate-spin mx-auto mb-4" />
+                <p className="text-color-secondary">Loading your uploads...</p>
+              </div>
+            ) : recentUploads.length === 0 ? (
+              <div className="card p-12 text-center">
+                <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-indigo-500/20 to-cyan-500/20 flex items-center justify-center mx-auto mb-6">
+                  <FileSpreadsheet className="w-12 h-12 text-indigo-400" />
+                </div>
+                <h3 className="text-2xl font-bold text-color-primary mb-3">No uploads yet</h3>
+                <p className="text-color-secondary mb-8 max-w-sm mx-auto">
+                  Upload your first Excel or CSV file to start analyzing your data and getting AI-powered insights.
                 </p>
-                <button onClick={() => navigate("/uploadFile")} className="btn-primary">
-                  Upload your first file
+                <button onClick={() => navigate("/uploadFile")} className="btn-primary inline-flex items-center gap-2">
+                  <Plus className="w-4 h-4" />
+                  Upload file now
                 </button>
               </div>
             ) : (
-              <ul className="divide-y divide-white/5">
-                {uploadHistory.map((upload) => (
-                  <li
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {recentUploads.map((upload) => (
+                  <div
                     key={upload._id}
                     onClick={() => fetchPreview(upload._id)}
-                    className="p-6 cursor-pointer hover:bg-white/5 transition-colors group"
+                    className="card p-5 backdrop-blur-xl cursor-pointer hover:border-indigo-500/50 transition-all duration-300 group"
                   >
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center group-hover:bg-indigo-500/30 transition-colors">
-                          <FileSpreadsheet className="w-5 h-5 text-indigo-400" />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-zinc-200">{upload.fileName}</p>
-                          <p className="text-sm text-zinc-500">
-                            {new Date(upload.uploadTime).toLocaleString()}
-                          </p>
-                        </div>
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center group-hover:bg-indigo-500/30 transition-colors flex-shrink-0">
+                        <FileSpreadsheet className="w-5 h-5 text-indigo-400" />
                       </div>
-                      <span className="flex items-center gap-1 text-sm text-indigo-400 font-medium">
-                        {activePreviewId === upload._id ? (
-                          <>Hide preview <ChevronUp className="w-4 h-4" /></>
-                        ) : (
-                          <>View preview <ChevronDown className="w-4 h-4" /></>
-                        )}
-                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-color-primary truncate group-hover:text-indigo-400 transition-colors">
+                          {upload.fileName}
+                        </p>
+                        <p className="text-xs text-color-secondary mt-1">
+                          {new Date(upload.uploadTime).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate("/visualization");
+                        }}
+                        className="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors opacity-0 group-hover:opacity-100"
+                      >
+                        Open
+                      </button>
                     </div>
 
                     {activePreviewId === upload._id && previewData && (
-                      <div className="mt-6 p-4 rounded-xl bg-zinc-800/50 border border-white/5 animate-fade-in">
-                        <h4 className="font-semibold text-zinc-400 mb-3 text-sm">Data preview</h4>
-                        <div className="overflow-x-auto">
-                          <pre className="text-sm text-zinc-400 font-mono">
-                            {previewData.slice(0, 5).map((line, idx) => (
-                              <div key={idx}>{JSON.stringify(line)}</div>
+                      <div className="mt-4 pt-4 border-t border-white/5 animate-fade-in">
+                        <h4 className="text-xs font-semibold text-color-secondary mb-2 uppercase tracking-wide">
+                          Preview
+                        </h4>
+                        <div className="bg-color-secondary/10 rounded-lg p-3 overflow-hidden">
+                          <div className="grid grid-cols-2 gap-2 text-xs">
+                            {previewData.slice(0, 4).map((item, idx) => (
+                              <div key={idx} className="truncate text-color-muted">
+                                {typeof item === "object"
+                                  ? Object.entries(item)
+                                      .slice(0, 2)
+                                      .map(([k, v]) => `${k}: ${v}`)
+                                      .join(" • ")
+                                  : String(item)}
+                              </div>
                             ))}
-                            {previewData.length > 5 && (
-                              <div className="text-zinc-500 mt-2">... and {previewData.length - 5} more rows</div>
-                            )}
-                          </pre>
+                          </div>
+                          {previewData.length > 4 && (
+                            <p className="text-xs text-color-muted mt-2">
+                              +{previewData.length - 4} more rows
+                            </p>
+                          )}
                         </div>
                         <button
                           onClick={(e) => {
@@ -164,15 +212,15 @@ const Dashboard = () => {
                             setData(previewData);
                             navigate("/visualization");
                           }}
-                          className="mt-4 btn-secondary text-sm py-2 px-4"
+                          className="mt-3 w-full text-xs font-medium py-2 px-3 rounded-lg bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/30 transition-colors"
                         >
-                          Visualize this data
+                          Visualize
                         </button>
                       </div>
                     )}
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             )}
           </div>
         </div>

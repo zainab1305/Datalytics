@@ -63,8 +63,8 @@ const AdminPanel = () => {
             <div className="w-16 h-16 rounded-2xl bg-red-500/20 flex items-center justify-center mx-auto mb-6">
               <Shield className="w-8 h-8 text-red-400" />
             </div>
-            <h2 className="text-xl font-bold text-zinc-100 mb-2">Access denied</h2>
-            <p className="text-zinc-500 mb-6">You don't have permission to view this page.</p>
+            <h2 className="text-xl font-bold text-color-primary mb-2">Access denied</h2>
+            <p className="text-color-secondary mb-6">You don't have permission to view this page.</p>
             <button onClick={() => navigate("/dashboard")} className="btn-primary">
               Back to dashboard
             </button>
@@ -80,20 +80,20 @@ const AdminPanel = () => {
         <div className="flex items-center gap-4 mb-10 animate-slide-up">
           <button
             onClick={() => navigate("/dashboard")}
-            className="p-2 rounded-lg hover:bg-white/5 text-zinc-400 hover:text-zinc-200 transition-colors"
+            className="p-2 rounded-lg hover:bg-hover-light text-color-secondary hover:text-color-primary transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-zinc-100">Admin panel</h1>
-            <p className="text-zinc-500">Manage users and uploads</p>
+            <h1 className="text-2xl lg:text-3xl font-bold text-color-primary">Admin panel</h1>
+            <p className="text-color-secondary">Manage users and uploads</p>
           </div>
         </div>
 
         {loading ? (
           <div className="card p-12 text-center">
             <div className="w-12 h-12 border-2 border-indigo-500/50 border-t-indigo-400 rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-zinc-500">Loading...</p>
+            <p className="text-color-secondary">Loading...</p>
           </div>
         ) : (
           <div className="space-y-8 animate-slide-up">
@@ -104,24 +104,24 @@ const AdminPanel = () => {
                   <User className="w-5 h-5 text-indigo-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-zinc-100">Users ({users.length})</h3>
-                  <p className="text-sm text-zinc-500">Registered accounts</p>
+                  <h3 className="text-lg font-bold text-color-primary">Users ({users.length})</h3>
+                  <p className="text-sm text-color-secondary">Registered accounts</p>
                 </div>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-white/5">
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-zinc-400">Name</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-zinc-400">Email</th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-zinc-400">Action</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-color-secondary">Name</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-color-secondary">Email</th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-color-secondary">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {users.map((u) => (
                       <tr key={u._id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                        <td className="px-6 py-4 font-medium text-zinc-200">{u.name}</td>
-                        <td className="px-6 py-4 text-zinc-400">{u.email}</td>
+                        <td className="px-6 py-4 font-medium text-color-primary">{u.name}</td>
+                        <td className="px-6 py-4 text-color-secondary">{u.email}</td>
                         <td className="px-6 py-4 text-right">
                           <button
                             onClick={() => deleteUser(u._id)}
@@ -145,26 +145,26 @@ const AdminPanel = () => {
                   <FileText className="w-5 h-5 text-emerald-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-zinc-100">Uploads ({uploads.length})</h3>
-                  <p className="text-sm text-zinc-500">File upload history</p>
+                  <h3 className="text-lg font-bold text-color-primary">Uploads ({uploads.length})</h3>
+                  <p className="text-sm text-color-secondary">File upload history</p>
                 </div>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-white/5">
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-zinc-400">File</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-zinc-400">Email</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-zinc-400">Uploaded</th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-zinc-400">Action</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-color-secondary">File</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-color-secondary">Email</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-color-secondary">Uploaded</th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-color-secondary">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {uploads.map((u) => (
                       <tr key={u._id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                        <td className="px-6 py-4 font-medium text-zinc-200">{u.fileName}</td>
-                        <td className="px-6 py-4 text-zinc-400">{u.userEmail}</td>
-                        <td className="px-6 py-4 text-zinc-500 text-sm">{new Date(u.uploadTime).toLocaleString()}</td>
+                        <td className="px-6 py-4 font-medium text-color-primary">{u.fileName}</td>
+                        <td className="px-6 py-4 text-color-secondary">{u.userEmail}</td>
+                        <td className="px-6 py-4 text-color-muted text-sm">{new Date(u.uploadTime).toLocaleString()}</td>
                         <td className="px-6 py-4 text-right">
                           <button
                             onClick={() => deleteUpload(u._id)}

@@ -88,10 +88,10 @@ const UploadFile = () => {
     <Layout>
       <div className="p-6 lg:p-10 max-w-4xl mx-auto">
         <div className="mb-10 animate-slide-up">
-          <h1 className="text-3xl lg:text-4xl font-bold text-zinc-100 mb-2">
+          <h1 className="text-3xl lg:text-4xl font-bold text-color-primary mb-2">
             Upload your data
           </h1>
-          <p className="text-zinc-500">
+          <p className="text-color-secondary">
             Drag & drop or select an Excel (.xlsx, .xls) or CSV file
           </p>
         </div>
@@ -127,8 +127,8 @@ const UploadFile = () => {
                 <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
                   <FileSpreadsheet className="w-8 h-8 text-emerald-400" />
                 </div>
-                <p className="text-xl font-semibold text-zinc-200">{selectedFile.name}</p>
-                <p className="text-sm text-zinc-500 mt-1">{(selectedFile.size / 1024).toFixed(1)} KB</p>
+                <p className="text-xl font-semibold text-color-primary">{selectedFile.name}</p>
+                <p className="text-sm text-color-secondary mt-1">{(selectedFile.size / 1024).toFixed(1)} KB</p>
                 <p className="text-sm text-indigo-400 mt-2">Click or drop another file to replace</p>
               </div>
             ) : (
@@ -136,8 +136,8 @@ const UploadFile = () => {
                 <div className="w-16 h-16 rounded-2xl bg-indigo-500/20 flex items-center justify-center mx-auto mb-4">
                   <Upload className="w-8 h-8 text-indigo-400" />
                 </div>
-                <p className="text-lg font-medium text-zinc-300 mb-1">Drop your file here</p>
-                <p className="text-sm text-zinc-500">or click to browse · .xlsx, .xls, .csv</p>
+                <p className="text-lg font-medium text-color-primary mb-1">Drop your file here</p>
+                <p className="text-sm text-color-secondary">or click to browse · .xlsx, .xls, .csv</p>
               </div>
             )}
           </label>
@@ -171,12 +171,12 @@ const UploadFile = () => {
                 <Sparkles className="w-5 h-5 text-cyan-400" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-zinc-100">AI insight summary</h3>
-                <p className="text-sm text-zinc-500">Powered by your data</p>
+                <h3 className="text-xl font-bold text-color-primary">AI insight summary</h3>
+                <p className="text-sm text-color-secondary">Powered by your data</p>
               </div>
             </div>
             <div className="prose prose-invert max-w-none">
-              <div className="text-zinc-300 leading-relaxed whitespace-pre-wrap">
+              <div className="text-color-secondary leading-relaxed whitespace-pre-wrap">
                 {insight.replace(/\*\*/g, "")}
               </div>
             </div>
